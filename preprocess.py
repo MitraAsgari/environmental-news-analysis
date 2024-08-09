@@ -32,5 +32,15 @@ df[text_column] = df[text_column].fillna('').astype(str)
 # Apply preprocessing
 df['cleaned_text'] = df[text_column].apply(preprocess_text)
 
+# Ensure no NaN values in the cleaned_text column
+df['cleaned_text'] = df['cleaned_text'].fillna('').astype(str)
+
+# Check for any completely empty strings after preprocessing
+df['cleaned_text'] = df['cleaned_text'].replace('', np.nan)
+df.dropna(subset=['cleaned_text'], inplace=True)
+
+# Re-check to ensure there are no NaN values left
+print(df['cleaned_text'].isnull().sum())
+
 # Save the cleaned dataset for further analysis
 df.to_csv('cleaned_environmental_news.csv', index=False)
